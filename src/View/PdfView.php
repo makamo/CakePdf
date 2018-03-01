@@ -15,14 +15,14 @@ class PdfView extends View
     /**
      * The subdirectory.  PDF views are always in pdf.
      *
-     * @var string
+     * @var string|null
      */
     public $subDir = 'pdf';
 
     /**
      * The name of the layouts subfolder containing layouts for this View.
      *
-     * @var string
+     * @var string|null
      */
     public $layoutPath = 'pdf';
     /**
@@ -63,7 +63,7 @@ class PdfView extends View
         );
 
         $response->type('pdf');
-        if (isset($viewOptions['name']) && $viewOptions['name'] == 'Error') {
+        if (isset($viewOptions['templatePath']) && $viewOptions['templatePath'] == 'Error') {
             $this->subDir = null;
             $this->layoutPath = null;
             $response->type('html');

@@ -16,8 +16,7 @@ Current engines:
 
 ## Requirements
 
-* PHP 5.4.16+
-* CakePHP 3.0+
+* CakePHP 3.4+
 * One of the following render engines: DomPdf, Mpdf, Tcpdf or wkhtmltopdf
 * pdftk (optional) See: http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
 
@@ -91,6 +90,7 @@ Configuration options:
 * engine: Engine to be used (required), or an array of engine config options
   * className: Engine class to use
   * binary: Binary file to use (Only for wkhtmltopdf)
+  * cwd: current working directory (Only for wkhtmltopdf)
   * options: Engine specific options. Currently only for `WkHtmlToPdf`, where the options
     are passed as CLI arguments, and for `DomPdf`, where the options are passed to the
     `DomPdf` class constructor.
@@ -156,6 +156,7 @@ options for the relevant class. For example:
             // old fashioned MS-DOS Paths, otherwise you will keep getting:
             // WKHTMLTOPDF didn't return any data
             // 'binary' => 'C:\\Progra~1\\wkhtmltopdf\\bin\\wkhtmltopdf.exe',
+            // 'cwd' => 'C:\\Progra~1\\wkhtmltopdf\\bin',
 	        'options' => [
 	            'print-media-type' => false,
 	            'outline' => true,
@@ -187,9 +188,12 @@ to your routes file and you can access the same document at
 `http://localhost/invoices/1.pdf`.
 
 In case you don't want to use the `pdf` extension in your URLs, you can omit
-registering it in your routes configuration, and have your requests send a
-`Accept: application/pdf` header instead.
+registering it in your routes configuration. Then in your controller action
+call `RequestHandler::render()` to switch the view class and template paths.
 
+```php
+$this->RequestHandler->renderAs($this, 'pdf', ['attachment' => 'filename.pdf']);
+```
 
 ### 2: Create PDF for email attachment, file storage etc.
 

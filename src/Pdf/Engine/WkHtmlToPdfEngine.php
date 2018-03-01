@@ -62,6 +62,34 @@ class WkHtmlToPdfEngine extends AbstractPdfEngine
     }
 
     /**
+     * Execute the WkHtmlToPdf commands for rendering pdfs
+     *
+     * @param string $cmd the command to execute
+     * @param string $input Html to pass to wkhtmltopdf
+     * @return array the result of running the command to generate the pdf
+     */
+    protected function _exec($cmd, $input)
+    {
+        $result = ['stdout' => '', 'stderr' => '', 'return' => ''];
+
+        $cwd = $this->config('cwd');
+
+        $proc = proc_open($cmd, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $cwd);
+        fwrite($pipes[0], $input);
+        fclose($pipes[0]);
+
+        $result['stdout'] = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+
+        $result['stderr'] = stream_get_contents($pipes[2]);
+        fclose($pipes[2]);
+
+        $result['return'] = proc_close($proc);
+
+        return $result;
+    }
+
+    /**
      * Get the command to render a pdf
      *
      * @return string the command for generating the pdf
@@ -201,31 +229,5 @@ class WkHtmlToPdfEngine extends AbstractPdfEngine
         $File->write($content);
 
         return $filepath;
-    }
-
-    /**
-     * Execute the WkHtmlToPdf commands for rendering pdfs
-     *
-     * @param string $cmd the command to execute
-     * @param string $input Html to pass to wkhtmltopdf
-     * @return string the result of running the command to generate the pdf
-     */
-    protected function _exec($cmd, $input)
-    {
-        $result = ['stdout' => '', 'stderr' => '', 'return' => ''];
-
-        $proc = proc_open($cmd, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
-        fwrite($pipes[0], $input);
-        fclose($pipes[0]);
-
-        $result['stdout'] = stream_get_contents($pipes[1]);
-        fclose($pipes[1]);
-
-        $result['stderr'] = stream_get_contents($pipes[2]);
-        fclose($pipes[2]);
-
-        $result['return'] = proc_close($proc);
-
-        return $result;
     }
 }
