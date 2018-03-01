@@ -1,4 +1,5 @@
 <?php
+
 namespace CakePdf\Test\TestCase\Pdf\Engine;
 
 use CakePdf\Pdf\CakePdf;

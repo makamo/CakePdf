@@ -111,7 +111,7 @@ class PdfViewTest extends TestCase
     {
         $request = new Request();
         $response = new Response();
-        $this->View = new PdfView($request, $response, null, [ 'templatePath' => 'Error' ]);
+        $this->View = new PdfView($request, $response, null, ['templatePath' => 'Error']);
 
         $this->assertNull($this->View->subDir);
         $this->assertNull($this->View->layoutPath);
